@@ -1,0 +1,43 @@
+version: '3.3'
+services:
+  productService:
+    image: product_image
+    container_name: product_container
+    build: springBoot/
+    restart: always
+    network_mode: host
+    ports:
+      - 64100:64100
+    depends_on:
+      - mongoService
+
+  mongoService:
+    image: mongo:3.4-jessie
+    container_name: mongo_container
+    ports:
+      - 27017:27017
+    network_mode: host
+
+
+  userService:
+    image: authentication_image
+    container_name: authentication_container
+    build: jwtDemo/
+    restart: always
+    network_mode: host
+    ports:
+      - 8083:8083
+    depends_on:
+      - mysqlService
+
+  mysqlService:
+    image: mysql:5.5
+    container_name: mysql_container
+    network_mode: host
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USERNAME: user
+      MYSQL_PASSWORD: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
